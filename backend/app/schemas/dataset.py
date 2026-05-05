@@ -1,9 +1,10 @@
+import uuid
 from datetime import datetime
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class DatasetResponse(BaseModel):
-    id: str
+    id: uuid.UUID
     original_name: str
     file_size: int | None
     row_count: int | None
@@ -12,8 +13,7 @@ class DatasetResponse(BaseModel):
     error_msg: str | None
     upload_date: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class DatasetPreview(BaseModel):

@@ -1,3 +1,5 @@
+import uuid as _uuid
+
 from fastapi import Cookie, Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import select
@@ -18,7 +20,12 @@ async def get_current_user(
     if not payload or payload.get("type") != "access":
         raise HTTPException(401, "Token invalide ou expiré")
 
-    result = await db.execute(select(User).where(User.id == payload["sub"]))
+    try:
+        user_id = _uuid.UUID(payload["sub"])
+    except (ValueError, KeyError):
+        raise HTTPException(401, "Token invalide")
+
+    result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if not user or not user.is_active:
         raise HTTPException(401, "Utilisateur introuvable")

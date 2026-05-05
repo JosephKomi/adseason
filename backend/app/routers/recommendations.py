@@ -32,7 +32,7 @@ async def generate_recommendations(
     if not dataset:
         raise HTTPException(404, "Dataset introuvable")
     if dataset.status != "processed":
-        raise HTTPException(422, "Dataset invalide ou non traité")
+        raise HTTPException(422, "Dataset invalide ou non traité correctement")
 
     df = load_dataframe(dataset.filename)
     df_clustered = predict_batch(df)
@@ -49,7 +49,17 @@ async def generate_recommendations(
     )
     db.add(reco)
     await db.flush()
-    return reco
+
+    return RecommendationResponse(
+        id=reco.id,
+        season=reco.season,
+        currency=reco.currency,
+        total_budget=float(reco.total_budget) if reco.total_budget else None,
+        clusters=reco.clusters,
+        model_version=reco.model_version,
+        created_at=reco.created_at,
+        dataset_name=dataset.original_name,
+    )
 
 
 @router.get("/", response_model=list[RecommendationListItem])
@@ -64,12 +74,17 @@ async def list_recommendations(
         .order_by(Recommendation.created_at.desc())
     )
     rows = result.all()
-    out = []
-    for reco, dataset_name in rows:
-        item = RecommendationListItem.model_validate(reco)
-        item.dataset_name = dataset_name
-        out.append(item)
-    return out
+    return [
+        RecommendationListItem(
+            id=reco.id,
+            season=reco.season,
+            currency=reco.currency,
+            total_budget=float(reco.total_budget) if reco.total_budget else None,
+            created_at=reco.created_at,
+            dataset_name=dataset_name,
+        )
+        for reco, dataset_name in rows
+    ]
 
 
 @router.get("/{reco_id}", response_model=RecommendationResponse)
@@ -78,7 +93,17 @@ async def get_recommendation(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    return await _get_or_404(reco_id, user.id, db)
+    reco, dataset_name = await _get_or_404(reco_id, user.id, db)
+    return RecommendationResponse(
+        id=reco.id,
+        season=reco.season,
+        currency=reco.currency,
+        total_budget=float(reco.total_budget) if reco.total_budget else None,
+        clusters=reco.clusters,
+        model_version=reco.model_version,
+        created_at=reco.created_at,
+        dataset_name=dataset_name,
+    )
 
 
 @router.get("/{reco_id}/export/pdf")
@@ -87,10 +112,10 @@ async def export_pdf(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    reco = await _get_or_404(reco_id, user.id, db)
+    reco, _ = await _get_or_404(reco_id, user.id, db)
     pdf_bytes = generate_pdf({
         "season": reco.season,
-        "total_budget": reco.total_budget,
+        "total_budget": float(reco.total_budget) if reco.total_budget else 0,
         "currency": reco.currency,
         "clusters": reco.clusters.get("items", []),
     })
@@ -107,15 +132,19 @@ async def delete_recommendation(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    reco = await _get_or_404(reco_id, user.id, db)
+    reco, _ = await _get_or_404(reco_id, user.id, db)
     await db.delete(reco)
 
 
-async def _get_or_404(reco_id: uuid.UUID, user_id: uuid.UUID, db: AsyncSession) -> Recommendation:
+async def _get_or_404(
+    reco_id: uuid.UUID, user_id: uuid.UUID, db: AsyncSession
+) -> tuple[Recommendation, str | None]:
     result = await db.execute(
-        select(Recommendation).where(Recommendation.id == reco_id, Recommendation.user_id == user_id)
+        select(Recommendation, Dataset.original_name)
+        .outerjoin(Dataset, Recommendation.dataset_id == Dataset.id)
+        .where(Recommendation.id == reco_id, Recommendation.user_id == user_id)
     )
-    reco = result.scalar_one_or_none()
-    if not reco:
+    row = result.one_or_none()
+    if not row:
         raise HTTPException(404, "Recommandation introuvable")
-    return reco
+    return row[0], row[1]
