@@ -1,0 +1,36 @@
+# ── Python ──────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+
+# ── Env files ────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── ML models ────────────────────────────────────────
+backend/app/ml/models/*.pkl
+
+# ── Uploads ──────────────────────────────────────────
+backend/uploads/
+
+# ── Angular ──────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# ── IDE ──────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ── OS ───────────────────────────────────────────────
+.DS_Store
+Thumbs.db
