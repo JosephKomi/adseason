@@ -1,22 +1,22 @@
 <div class="container-fluid bg-auth pb-lg-3 pb-md-3 pb-1">
   <div class="row pt-lg-3 pt-md-3 pt-1 justify-content-center">
-    <div class="col-lg-10 mt-5 col-md-11 col-sm-12 card border-0 login-outer">
-      <div class="row">
+    <div class="col-lg-8 mt-5 col-md-10 col-sm-12 login-outer">
+      <div class="row g-0">
 
-        <!-- Côté gauche — visuel -->
-        <div class="col-lg-6 col-sm-12 text-center d-none d-lg-flex flex-column align-items-center justify-content-center login-visual">
+        <!-- Côté gauche — visuel (transparent) -->
+        <div class="col-lg-5 col-sm-12 d-none d-lg-flex flex-column align-items-center justify-content-center login-visual">
           <img src="/logo.png" height="100" alt="Logo" class="mb-3"
                onerror="this.style.display='none'" />
           <h4 style="color: var(--color-primary)" class="fw-bold mt-3 px-4">
             Bienvenue sur AdSeason
           </h4>
-          <h6 style="font-size: 16px" class="fw-semibold pb-3 text-muted px-4">
+          <h6 style="font-size: 15px" class="fw-semibold pb-3 text-muted px-4 text-center">
             Recommandations publicitaires personnalisées
           </h6>
         </div>
 
-        <!-- Côté droit — formulaire -->
-        <div class="col-lg-6 mt-3 col-sm-12">
+        <!-- Côté droit — formulaire (fond blanc) -->
+        <div class="col-lg-7 col-sm-12 login-form-col">
           <div class="justify-content-center">
             <form class="mt-4 mx-2 p-3 card border-0 pb-3 login-form"
                   [formGroup]="form" (ngSubmit)="submit()">
@@ -67,7 +67,7 @@
               <button type="submit"
                       [disabled]="form.invalid || loading()"
                       style="background: var(--color-primary);"
-                      class="btn text-white mb-2 mx-3 shadow d-flex align-items-center justify-content-center btn-submit">
+                      class="btn text-white mb-2 shadow btn-submit">
                 @if (loading()) {
                   <span class="spinner-border spinner-border-sm me-2"></span>
                 }
