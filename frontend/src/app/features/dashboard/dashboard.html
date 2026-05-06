@@ -1,1 +1,136 @@
-<p>dashboard works!</p>
+<div class="container-fluid p-0">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="fw-bold mb-1">Bonjour, {{ auth.currentUser()?.full_name || 'utilisateur' }} 👋</h4>
+      <p class="text-muted mb-0">Voici un résumé de votre activité</p>
+    </div>
+    <a routerLink="/recommendations" class="btn btn-primary-custom">
+      <i class="fas fa-magic me-2"></i>Nouvelle recommandation
+    </a>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="row g-3 mb-4">
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-database"></i></div>
+        <div>
+          <div class="stat-value">{{ datasets().length }}</div>
+          <div class="stat-label">Datasets importés</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(163,177,138,0.15); color:var(--color-secondary)">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <div>
+          <div class="stat-value">{{ processedDatasets }}</div>
+          <div class="stat-label">Datasets traités</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(88,129,87,0.12); color:var(--color-primary)">
+          <i class="fas fa-magic"></i>
+        </div>
+        <div>
+          <div class="stat-value">{{ recommendations().length }}</div>
+          <div class="stat-label">Recommandations</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:rgba(218,215,205,0.5); color:#888">
+          <i class="fas fa-users"></i>
+        </div>
+        <div>
+          <div class="stat-value">{{ totalRows.toLocaleString() }}</div>
+          <div class="stat-label">Clients analysés</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent activity -->
+  <div class="row g-3">
+    <!-- Recent datasets -->
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
+          <span><i class="fas fa-file-csv me-2"></i>Datasets récents</span>
+          <a routerLink="/recommendations" class="btn btn-sm"
+             style="background:rgba(255,255,255,0.2); color:white; border:none; font-size:0.8rem">
+            Importer <i class="fas fa-plus ms-1"></i>
+          </a>
+        </div>
+        <div class="card-body p-0">
+          @if (datasets().length === 0) {
+            <div class="text-center py-5 text-muted">
+              <i class="fas fa-file-upload fa-2x mb-3 d-block" style="color:var(--color-light)"></i>
+              Aucun dataset importé
+            </div>
+          } @else {
+            <ul class="list-group list-group-flush">
+              @for (d of datasets().slice(0, 5); track d.id) {
+                <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                  <div>
+                    <div class="fw-semibold" style="font-size:0.9rem">{{ d.original_name }}</div>
+                    <small class="text-muted">{{ d.row_count?.toLocaleString() ?? '—' }} lignes · {{ formatDate(d.upload_date) }}</small>
+                  </div>
+                  @if (d.status === 'processed') {
+                    <span class="badge-primary">Prêt</span>
+                  } @else if (d.status === 'error') {
+                    <span class="badge bg-danger">Erreur</span>
+                  } @else {
+                    <span class="badge bg-warning text-dark">Traitement</span>
+                  }
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent recommendations -->
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header-custom d-flex justify-content-between align-items-center">
+          <span><i class="fas fa-magic me-2"></i>Recommandations récentes</span>
+          <a routerLink="/history" class="btn btn-sm"
+             style="background:rgba(255,255,255,0.2); color:white; border:none; font-size:0.8rem">
+            Voir tout <i class="fas fa-arrow-right ms-1"></i>
+          </a>
+        </div>
+        <div class="card-body p-0">
+          @if (recommendations().length === 0) {
+            <div class="text-center py-5 text-muted">
+              <i class="fas fa-lightbulb fa-2x mb-3 d-block" style="color:var(--color-light)"></i>
+              Aucune recommandation générée
+            </div>
+          } @else {
+            <ul class="list-group list-group-flush">
+              @for (r of recommendations().slice(0, 5); track r.id) {
+                <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-3">
+                  <div>
+                    <div class="fw-semibold" style="font-size:0.9rem">Saison : {{ r.season }}</div>
+                    <small class="text-muted">
+                      {{ r.total_budget?.toLocaleString() ?? '—' }} {{ r.currency }} · {{ formatDate(r.created_at) }}
+                    </small>
+                  </div>
+                  <span class="badge-secondary">{{ r.clusters?.['items']?.length ?? 0 }} clusters</span>
+                </li>
+              }
+            </ul>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

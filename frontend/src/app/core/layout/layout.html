@@ -1,0 +1,42 @@
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <i class="fas fa-leaf me-2"></i>AdSeason
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="active" class="nav-item-link">
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="avatar">
+          <i class="fas fa-user-circle fa-lg" style="color: rgba(255,255,255,0.7)"></i>
+        </div>
+        <div class="overflow-hidden">
+          <div class="text-white fw-semibold text-truncate" style="font-size:0.85rem">
+            {{ auth.currentUser()?.full_name || auth.currentUser()?.email }}
+          </div>
+          <div style="font-size:0.75rem; color:rgba(255,255,255,0.55)">
+            {{ auth.currentUser()?.company || 'Utilisateur' }}
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-sm w-100" (click)="auth.logout()"
+              style="background:rgba(255,255,255,0.12); color:white; border:none;">
+        <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>

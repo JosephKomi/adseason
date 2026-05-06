@@ -1,1 +1,97 @@
-<p>login works!</p>
+<div class="container-fluid bg-auth pb-lg-3 pb-md-3 pb-1">
+  <div class="row pt-lg-3 pt-md-3 pt-1 justify-content-center">
+    <div class="col-lg-10 mt-5 col-md-11 col-sm-12 card border-0 login-outer">
+      <div class="row">
+
+        <!-- Côté gauche — visuel -->
+        <div class="col-lg-6 col-sm-12 text-center d-none d-lg-flex flex-column align-items-center justify-content-center login-visual">
+          <img src="/logo.png" height="100" alt="Logo" class="mb-3"
+               onerror="this.style.display='none'" />
+          <h4 style="color: var(--color-primary)" class="fw-bold mt-3 px-4">
+            Bienvenue sur AdSeason
+          </h4>
+          <h6 style="font-size: 16px" class="fw-semibold pb-3 text-muted px-4">
+            Recommandations publicitaires personnalisées
+          </h6>
+        </div>
+
+        <!-- Côté droit — formulaire -->
+        <div class="col-lg-6 mt-3 col-sm-12">
+          <div class="justify-content-center">
+            <form class="mt-4 mx-2 p-3 card border-0 pb-3 login-form"
+                  [formGroup]="form" (ngSubmit)="submit()">
+
+              <div class="mx-4 d-flex justify-content-start" style="color: var(--color-primary)">
+                <h4 class="fw-bold mt-4">Connectez-vous</h4>
+              </div>
+
+              @if (error()) {
+                <div class="alert alert-danger mx-3 mt-2 py-2" style="font-size:0.88rem">
+                  <i class="fas fa-exclamation-circle me-1"></i>{{ error() }}
+                </div>
+              }
+
+              <div class="form-group p-3">
+                <label for="email">Adresse email</label>
+                <input type="email" class="form-control" id="email"
+                       formControlName="email" placeholder="votre@email.com"
+                       [ngClass]="{'is-invalid': form.get('email')?.errors && (form.get('email')?.touched || form.get('email')?.dirty)}">
+                @if (form.get('email')?.errors && (form.get('email')?.touched || form.get('email')?.dirty)) {
+                  <small class="message-erreur">
+                    <em class="fa fa-exclamation-circle icon-red me-1"></em>Adresse email invalide
+                  </small>
+                }
+              </div>
+
+              <div class="form-group mx-3 pb-2">
+                <label for="password">Mot de passe</label>
+                <div class="input-group">
+                  <input [type]="showPassword() ? 'text' : 'password'"
+                         class="form-control" id="password"
+                         formControlName="password" placeholder="••••••••"
+                         [ngClass]="{'is-invalid': form.get('password')?.errors && (form.get('password')?.touched || form.get('password')?.dirty)}">
+                  <div class="input-group-append">
+                    <span class="input-group-text border-0 voir-mot-passe" (click)="togglePassword()">
+                      @if (!showPassword()) { <i class="fas fa-eye-slash"></i> }
+                      @if (showPassword()) { <i class="fas fa-eye"></i> }
+                    </span>
+                  </div>
+                </div>
+                @if (form.get('password')?.touched && form.get('password')?.errors?.['required']) {
+                  <small class="message-erreur">
+                    <em class="fa fa-exclamation-circle icon-red me-1"></em>Mot de passe requis
+                  </small>
+                }
+              </div>
+
+              <button type="submit"
+                      [disabled]="form.invalid || loading()"
+                      style="background: var(--color-primary);"
+                      class="btn text-white mb-2 mx-3 shadow d-flex align-items-center justify-content-center btn-submit">
+                @if (loading()) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                Se connecter
+              </button>
+            </form>
+
+            <p-divider align="center">
+              <span class="fw-bold">OU</span>
+            </p-divider>
+
+            <div class="d-flex justify-content-center" style="margin-top:-15px">
+              <h6 class="m-2">
+                <a routerLink="/auth/register" class="link-primary">
+                  Créer un compte <i class="fa fa-arrow-circle-right ms-1"></i>
+                </a>
+              </h6>
+            </div>
+          </div>
+          <br><br>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <br><br><br>
+</div>

@@ -1,0 +1,251 @@
+<div class="landing-page">
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+    <div class="container-fluid px-4">
+      <a routerLink="/" class="navbar-brand">
+        <img src="/logo.png" height="58" alt="Logo" />
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navMain">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a href="#fonctionnalites" class="nav-link">Fonctionnalités</a></li>
+          <li class="nav-item"><a href="#processus" class="nav-link">Comment ça marche</a></li>
+          <li class="nav-item"><a href="#faq" class="nav-link">FAQ</a></li>
+        </ul>
+        <div class="d-flex align-items-center gap-3">
+          <a routerLink="/auth/login" class="btn btn-outline-custom px-4">Se connecter</a>
+          <a routerLink="/auth/register" class="btn btn-primary-custom px-4">
+            Créer un compte <i class="pi pi-arrow-right ms-1"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 col-md-12">
+          <h1 class="hero-title">
+            Des recommandations publicitaires
+            <span class="hero-highlight">adaptées à chaque saison</span>
+          </h1>
+          <p class="hero-subtitle">
+            Importez vos données clients, obtenez des stratégies publicitaires
+            personnalisées par segment pour maximiser votre retour sur investissement
+            tout au long de l'année.
+          </p>
+          <div class="d-flex gap-3 flex-wrap mt-4">
+            <a routerLink="/auth/register" class="btn btn-primary-custom btn-lg px-5">
+              Commencer gratuitement <i class="pi pi-arrow-right ms-2"></i>
+            </a>
+            <a routerLink="/auth/login" class="btn btn-outline-custom btn-lg px-5">
+              Se connecter
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center">
+          <div class="hero-visual-wrap">
+
+            <!-- Badge haut-gauche -->
+            <div class="hero-badge badge-top-left">
+              <i class="fas fa-chart-pie"></i>
+              <span>Segmentation automatique</span>
+            </div>
+
+            <!-- Badge haut-droite -->
+            <div class="hero-badge badge-top-right">
+              <i class="fas fa-calendar-alt"></i>
+              <span>Analyse saisonnière</span>
+            </div>
+
+            <!-- Cercle central -->
+            <div class="hero-circle">
+              <img src="/logo_2.png" alt="AdSeason" />
+            </div>
+
+            <!-- Badge bas-gauche -->
+            <div class="hero-badge badge-bottom-left">
+              <i class="fas fa-file-export"></i>
+              <span>Export PDF / Excel</span>
+            </div>
+
+            <!-- Badge bas-droite -->
+            <div class="hero-badge badge-bottom-right">
+              <i class="fas fa-check-circle"></i>
+              <span>ROI estimé par segment</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Steps ── -->
+  <section id="processus" class="steps-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-heading">Comment ça marche ?</h2>
+        <p class="section-description">Un processus simple et rapide en 4 étapes</p>
+      </div>
+      <div class="row justify-content-center g-3">
+        @for (step of steps; track step.num) {
+          <div class="col-lg-3 col-md-6 col-sm-12">
+            <div class="card border-0 shadow-sm h-100 step-card">
+              <div class="card-body d-flex flex-column align-items-center text-center p-4">
+                <div class="step-circle mb-3"><span>{{ step.num }}</span></div>
+                <div class="step-icon mb-3"><i [class]="step.icon"></i></div>
+                <h6 class="fw-bold">{{ step.title }}</h6>
+                <p class="text-muted mb-0" style="font-size:0.88rem">{{ step.desc }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      <div class="text-center mt-4">
+        <a routerLink="/auth/register" class="btn btn-primary-custom btn-lg px-5">
+          Faire ma première analyse <i class="pi pi-arrow-right ms-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Features ── -->
+  <section id="fonctionnalites" class="features-section bg-white">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-heading">Ce qu'AdSeason fait pour vous</h2>
+        <p class="section-description">Une plateforme complète pour optimiser vos campagnes publicitaires</p>
+      </div>
+      <div class="row align-items-center justify-content-center">
+        <div class="col-lg-6">
+          <p-accordion value="0">
+            @for (s of services; track s.value) {
+              <p-accordion-panel [value]="s.value">
+                <p-accordion-header>{{ s.titre }}</p-accordion-header>
+                <p-accordion-content>
+                  <p class="text-muted mb-2">{{ s.contenu }}</p>
+                  <a routerLink="/auth/register" class="voir-detail">
+                    Commencer <i class="pi pi-arrow-right ms-1"></i>
+                  </a>
+                </p-accordion-content>
+              </p-accordion-panel>
+            }
+          </p-accordion>
+        </div>
+        <div class="col-lg-5 d-none d-lg-block text-center">
+          <div class="season-grid">
+            @for (s of [
+              {name:'Printemps', icon:'fas fa-seedling', bg:'#e8f5e9'},
+              {name:'Été', icon:'fas fa-sun', bg:'#fff8e1'},
+              {name:'Automne', icon:'fas fa-leaf', bg:'#fbe9e7'},
+              {name:'Hiver', icon:'fas fa-snowflake', bg:'#e3f2fd'}
+            ]; track s.name) {
+              <div class="season-item" [style.background]="s.bg">
+                <i [class]="s.icon"></i>
+                <span>{{ s.name }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA banner ── -->
+  <section class="cta-banner">
+    <div class="cta-overlay">
+      <div class="container text-center">
+        <h2 class="fw-bold mb-3 text-white">Prêt à transformer vos données en stratégie ?</h2>
+        <p class="mb-4" style="color:rgba(255,255,255,0.8)">
+          Rejoignez AdSeason et optimisez vos campagnes publicitaires dès aujourd'hui.
+        </p>
+        <a routerLink="/auth/register" class="btn btn-lg px-5"
+           style="background:white; color:var(--color-primary); font-weight:700">
+          Créer mon compte gratuitement <i class="pi pi-arrow-right ms-2"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section id="faq" class="faq-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-heading">Questions fréquentes</h2>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          @for (faq of faqs; track faq.value) {
+            <div class="mb-3">
+              <p-panel [header]="faq.q" [toggleable]="true" [collapsed]="true">
+                <p class="text-muted mb-0">{{ faq.r }}</p>
+              </p-panel>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="landing-footer">
+    <div class="container">
+      <div class="footer-top row align-items-start py-5">
+
+        <!-- Description -->
+        <div class="col-lg-5 col-md-12 mb-4 mb-lg-0 footer-brand">
+          <h5 class="fw-bold text-white mb-2">AdSeason</h5>
+          <p class="footer-desc">
+            Plateforme intelligente de recommandation publicitaire.<br>
+            Analysez, segmentez et optimisez vos campagnes saison après saison.
+          </p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <h6 class="footer-heading">Navigation</h6>
+          <ul class="list-unstyled footer-links">
+            <li><a href="#processus"><i class="fas fa-chevron-right me-2"></i>Comment ça marche</a></li>
+            <li><a href="#fonctionnalites"><i class="fas fa-chevron-right me-2"></i>Fonctionnalités</a></li>
+            <li><a href="#faq"><i class="fas fa-chevron-right me-2"></i>FAQ</a></li>
+          </ul>
+        </div>
+
+        <!-- Compte -->
+        <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+          <h6 class="footer-heading">Accès</h6>
+          <ul class="list-unstyled footer-links">
+            <li>
+              <a routerLink="/auth/login">
+                <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+              </a>
+            </li>
+            <li>
+              <a routerLink="/auth/register">
+                <i class="fas fa-user-plus me-2"></i>Créer un compte
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <span>© 2026 AdSeason — Tous droits réservés</span>
+        <span class="footer-tagline">
+          <i class="fas fa-leaf me-1"></i> Propulsé par l'IA
+        </span>
+      </div>
+    </div>
+  </footer>
+
+</div>

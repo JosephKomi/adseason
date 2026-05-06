@@ -1,1 +1,158 @@
-<p>register works!</p>
+<div class="container-fluid mt-lg-3 mt-3 p-0">
+  <div class="container">
+    <div class="row flex-row-reverse">
+
+      <!-- Formulaire col-lg-8 (affiché à droite grâce à flex-row-reverse) -->
+      <div class="col-lg-8">
+        <form class="mt-4 mb-4 form-register"
+              [formGroup]="form" (ngSubmit)="submit()">
+
+          <div class="card-title text-center mt-3 pb-2">
+            <h3 class="fw-bold fs-3 pt-4" style="color: var(--color-primary)">
+              Renseignez <span class="text-dark">le formulaire</span>
+            </h3>
+          </div>
+
+          @if (error()) {
+            <div class="alert alert-danger mx-4 py-2" style="font-size:0.88rem">
+              <i class="fas fa-exclamation-circle me-1"></i>{{ error() }}
+            </div>
+          }
+
+          <!-- Nom complet + Entreprise -->
+          <div class="row">
+            <div class="col-md-6 mb-3 px-5 form-group">
+              <label for="full_name" class="label-required">Nom complet</label>
+              <input type="text" class="form-control" id="full_name"
+                     formControlName="full_name" placeholder="Jean Dupont"
+                     [ngClass]="{'is-invalid': form.get('full_name')?.errors && (form.get('full_name')?.touched || form.get('full_name')?.dirty)}">
+              @if (form.get('full_name')?.errors && (form.get('full_name')?.touched || form.get('full_name')?.dirty)) {
+                <small class="message-erreur">
+                  <em class="fa fa-exclamation-circle icon-red me-1"></em>Champ requis
+                </small>
+              }
+            </div>
+            <div class="col-md-6 mb-3 px-5 form-group">
+              <label for="company">Entreprise <span class="text-muted fw-normal" style="font-size:0.8rem">(optionnel)</span></label>
+              <input type="text" class="form-control" id="company"
+                     formControlName="company" placeholder="Ma Société">
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="row pb-2">
+            <div class="col-md-12 mb-3 px-5 form-group">
+              <label for="email" class="label-required">Adresse email</label>
+              <input type="email" class="form-control" id="email"
+                     formControlName="email" placeholder="votre@email.com"
+                     [ngClass]="{'is-invalid': form.get('email')?.errors && (form.get('email')?.touched || form.get('email')?.dirty)}">
+              @if (form.get('email')?.errors && (form.get('email')?.touched || form.get('email')?.dirty)) {
+                <small class="message-erreur">
+                  <em class="fa fa-exclamation-circle icon-red me-1"></em>Adresse email invalide
+                </small>
+              }
+            </div>
+          </div>
+
+          <!-- Mot de passe + Confirmation -->
+          <div class="row pb-4">
+            <div class="col-md-6 mb-3 px-5 form-group">
+              <label for="password" class="label-required">Mot de passe</label>
+              <div class="input-group">
+                <input [type]="showPassword() ? 'text' : 'password'"
+                       class="form-control" id="password"
+                       formControlName="password" placeholder="8 caractères minimum"
+                       [ngClass]="{'is-invalid': form.get('password')?.errors && (form.get('password')?.touched || form.get('password')?.dirty)}">
+                <div class="input-group-append">
+                  <span class="input-group-text border-0 voir-mot-passe mt-0 bg-white" (click)="togglePassword()">
+                    @if (!showPassword()) { <i class="fas fa-eye-slash"></i> }
+                    @if (showPassword()) { <i class="fas fa-eye"></i> }
+                  </span>
+                </div>
+              </div>
+              @if (form.get('password')?.touched && form.get('password')?.errors?.['required']) {
+                <small class="message-erreur">
+                  <em class="fa fa-exclamation-circle icon-red me-1"></em>Mot de passe requis
+                </small>
+              }
+              @if (form.get('password')?.touched && form.get('password')?.errors?.['minlength']) {
+                <small class="message-erreur">
+                  <em class="fa fa-exclamation-circle icon-red me-1"></em>8 caractères minimum
+                </small>
+              }
+            </div>
+            <div class="col-md-6 mb-3 form-group px-5">
+              <label for="confirmPassword" class="label-required">Confirmer le mot de passe</label>
+              <div class="input-group">
+                <input [type]="showConfirm() ? 'text' : 'password'"
+                       class="form-control" id="confirmPassword"
+                       formControlName="confirmPassword" placeholder="Répétez le mot de passe"
+                       [ngClass]="{'is-invalid': form.get('confirmPassword')?.touched && form.errors?.['passwordsMismatch']}">
+                <div class="input-group-append">
+                  <span class="input-group-text border-0 voir-mot-passe mt-0 bg-white" (click)="toggleConfirm()">
+                    @if (!showConfirm()) { <i class="fas fa-eye-slash"></i> }
+                    @if (showConfirm()) { <i class="fas fa-eye"></i> }
+                  </span>
+                </div>
+              </div>
+              @if (form.get('confirmPassword')?.touched && form.get('confirmPassword')?.errors?.['required']) {
+                <small class="message-erreur">
+                  <em class="fa fa-exclamation-circle icon-red me-1"></em>Champ requis
+                </small>
+              }
+              @if (form.get('confirmPassword')?.touched && form.errors?.['passwordsMismatch']) {
+                <small class="message-erreur">
+                  <em class="fa fa-exclamation-circle icon-red me-1"></em>Les mots de passe ne correspondent pas
+                </small>
+              }
+            </div>
+          </div>
+
+          <!-- Bouton -->
+          <div class="row pb-4">
+            <div class="d-flex justify-content-center">
+              <button type="submit"
+                      [disabled]="form.invalid || loading()"
+                      style="background: var(--color-primary); min-width: 260px;"
+                      class="btn text-white btn-submit shadow mb-2">
+                @if (loading()) {
+                  <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                Créer mon compte
+              </button>
+            </div>
+
+            <p-divider align="center">
+              <span class="fw-bold">OU</span>
+            </p-divider>
+
+            <div class="d-flex justify-content-center" style="margin-top:-15px">
+              <h6 class="m-2">
+                <a routerLink="/auth/login" class="link-primary">
+                  Se connecter <i class="pi pi-arrow-circle-right ms-1"></i>
+                </a>
+              </h6>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Visuel col-lg-4 (affiché à gauche grâce à flex-row-reverse) -->
+      <div class="col-lg-4 text-center d-flex flex-column d-none d-lg-block mt-5">
+        <div class="card-title text-center mt-5">
+          <h3 class="fw-bold fs-4" style="color: var(--color-primary)">Inscrivez-vous</h3>
+        </div>
+        <div class="d-flex align-self-center justify-content-center pb-4 mt-3">
+          <img src="/logo.png" alt="AdSeason" class="img-fluid"
+               style="max-height: 200px; opacity: 0.9"
+               onerror="this.style.display='none'" />
+        </div>
+        <p class="text-center mt-2 px-3" style="color: #555; font-size: 0.9rem">
+          Importez vos données clients et obtenez des stratégies publicitaires personnalisées saison après saison.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
