@@ -1,4 +1,5 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { LoginRequest, RegisterRequest, TokenResponse, User } from '../models/user.model';
@@ -36,7 +37,9 @@ export class AuthService {
   loadMe() {
     this.api.get<User>('/api/auth/me').subscribe({
       next: user => this.currentUser.set(user),
-      error: () => this.logout(),
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 401) this.logout();
+      },
     });
   }
 
